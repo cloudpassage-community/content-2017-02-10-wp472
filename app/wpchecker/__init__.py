@@ -29,7 +29,8 @@ class Halo(object):
                                                                        "svm")
         for target_package in target_packages:
             if "scan" not in server_software_inventory:
-                print("Server with ID %s has no SVM scan information!" % server_id)
+                print("    Server with ID %s has no SVM scan information!" % server_id)
+                continue
             for finding in server_software_inventory["scan"]["findings"]:
                 if target_package in finding["package_name"]:
                     hit = (server_id, target_package,
@@ -93,7 +94,7 @@ class Halo(object):
 
     def server_is_not_active(self, server_id):
         if self.server_module.describe(server_id)["state"] != "active":
-            print("Server %s is not active anymore!" % server_id)
+            print("    Server %s is not active anymore!" % server_id)
             return True
         else:
             return False

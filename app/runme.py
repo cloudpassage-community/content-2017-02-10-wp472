@@ -19,9 +19,8 @@ halo_api = Halo(halo_api_key, halo_api_secret_key)
 
 
 def get_lines_from_file(file_path):
-    retval = []
     with open(file_path) as file_obj:
-        retval.append(file_obj.read().split('\n'))
+        retval = (file_obj.read().split('\n'))
     return retval
 
 
@@ -57,9 +56,9 @@ def generate_fim_policy(webroot):
 
 
 def fim_path_suspect(path):
-    print path
     for matcher in get_lines_from_file(paths_file):
-        print("Matcher: %s" % matcher)
+        if matcher == "":
+            continue
         m = re.compile(matcher)
         if m.match(path):
             return True
@@ -67,7 +66,6 @@ def fim_path_suspect(path):
 
 
 def fim_hash_suspect(fim_hash):
-    print fim_hash
     if fim_hash in get_lines_from_file(hashes_file):
         return True
     return False
@@ -134,9 +132,9 @@ def main():
             meta = halo_api.get_command_meta(server, scan["id"])
             if meta["status"] == "completed":
                 running_csm_ids.remove((server, scan))
-                print("  Completed: Server with ID %s" % server)
+                print("    Completed: Server with ID %s" % server)
                 if halo_api.get_server_csm_state(server)["scan"]["critical_findings_count"] > 0:
-                    csm_alert_messages += str("  Critical CSM issues exist on server with ID %s\n" % server)
+                    csm_alert_messages += str("    Critical CSM issues exist on server with ID %s\n" % server)
             elif meta["status"] == "failed":
                 running_csm_ids.remove((server, scan))
                 print("  FAILED:")
@@ -150,19 +148,19 @@ def main():
     while running_baseline_ids:
         for (server, baseline_id, policy_id) in running_baseline_ids:
             time.sleep(10)  # Don't beat on the API
-            baseline = halo_api.get_fim_baseline(policy_id, baseline_id)
+            baseline = halo_api.get_fim_baseline(policy_id, baseline_id)["baseline"]["details"]
             running_baseline_ids.remove((server, baseline_id, policy_id))
             pp = pprint.PrettyPrinter(indent=4)
-            pp.pprint(baseline)
+
             if "targets" not in baseline:
                 continue
             for target in baseline["targets"]:
                 for obj in target["objects"]:
-                    if fim_path_suspect(obj["name"]):
-                        baseline_alert_messages += str("Potential issue on server %s (path: %s)\n" % (server, obj["name"]))
+                    # pp.pprint(obj)
+                    if fim_path_suspect(obj["filename"]):
+                        baseline_alert_messages += str("    Potential issue on server %s (path: %s)\n" % (server, obj["filename"]))
                     if fim_hash_suspect(obj["contents"]):
-                        baseline_alert_messages.append("Bad hash match!!\n")
-                        baseline_alert_messages.append("  Server: %s\n" % server)
+                        baseline_alert_messages += str("    Bad hash match: Server %s file %s\n" % (server, obj["filename"]))
 
     # Print results
     print("Baseline alerts:")

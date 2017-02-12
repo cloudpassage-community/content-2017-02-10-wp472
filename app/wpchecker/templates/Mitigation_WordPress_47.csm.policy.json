@@ -23,7 +23,7 @@
             "present": true
           },
           {
-            "files": "/var/www/html/wordpress/blog/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php",
+            "files": "/var/www/html/wordpress/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php",
             "exportable": true,
             "object_type": "file_string_presence",
             "patterns": "\\@since\\s+4\\.7\\.2",
