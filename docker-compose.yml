@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+  cent_wp_471_tgz:
+    build: ./docker_test/centos_wp471_tgz
+    environment:
+      AGENT_KEY: ${AGENT_KEY}
+    networks:
+      - test_net
+  fed_wp_pkg:
+    build: ./docker_test/fedora_pkg
+    environment:
+      AGENT_KEY: ${AGENT_KEY}
+    networks:
+      - test_net
+  ubu_wp_pkg:
+    build: ./docker_test/ubuntu_pkg
+    environment:
+      AGENT_KEY: ${AGENT_KEY}
+    networks:
+      - test_net
+  ubu_wp_47_tgz:
+    build: ./docker_test/ubuntu_wp47_tgz
+    environment:
+      AGENT_KEY: ${AGENT_KEY}
+    networks:
+      - test_net
+networks:
+  test_net:
+    driver: bridge

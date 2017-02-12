@@ -1,0 +1,1 @@
+.*wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php$

@@ -1,44 +1,40 @@
 {
   "policy": {
-    "retired": false, 
-    "name": "WordPress 4.7 Content Injection", 
-    "module": "csm", 
-    "platform": "linux", 
+    "name": "WordPress 4.7 Content Injection",
+    "platform": "linux",
     "rules": [
       {
-        "comment": "If WordPress 4.7.2 is installed then the configuration files for the REST API will reflect that.\r\n\r\nPlease note: the default directory location for the WordPress files may vary depending on where the Web Root of the web server is located, and whether the end-user has installed WordPress in the root directory or a sub-directory.  It may be necessary to adjust the paths present in the checks below.", 
-        "reference_identifiers": [], 
-        "log": false, 
-        "taxonomy": "system_configuration", 
-        "rule_operator": "OR", 
-        "alert": false, 
-        "critical": false, 
-        "active": true, 
+        "comment": "If WordPress 4.7.2 is installed then the configuration files for the REST API will reflect that.\r\n\r\nPlease note: the default directory location for the WordPress files may vary depending on where the Web Root of the web server is located, and whether the end-user has installed WordPress in the root directory or a sub-directory.  It may be necessary to adjust the paths present in the checks below.",
+        "reference_identifiers": [],
+        "log": true,
+        "taxonomy": "system_configuration",
+        "rule_operator": "OR",
+        "alert": false,
+        "critical": true,
+        "active": true,
         "checks": [
           {
-            "files": "/var/www/html/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php", 
-            "exportable": true, 
-            "object_type": "file_string_presence", 
-            "patterns": "\\@since\\s+4\\.7\\.2", 
-            "suggestion": "If the 4.7.2 version string is not present in the file, then that version is not present on the system.\r\n\r\nIf this check does not find a file, but WordPress is installed, it may be necessary to update the file path to reflect the location of the WordPress installation on the system.", 
-            "active": true, 
+            "files": "/var/www/html/wordpress/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php",
+            "exportable": true,
+            "object_type": "file_string_presence",
+            "patterns": "\\@since\\s+4\\.7\\.2",
+            "suggestion": "If the 4.7.2 version string is not present in the file, then that version is not present on the system.\r\n\r\nIf this check does not find a file, but WordPress is installed, it may be necessary to update the file path to reflect the location of the WordPress installation on the system.",
+            "active": true,
             "present": true
-          }, 
+          },
           {
-            "files": "/var/www/html/blog/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php", 
-            "exportable": true, 
-            "object_type": "file_string_presence", 
-            "patterns": "\\@since\\s+4\\.7\\.2", 
-            "suggestion": "If the 4.7.2 version string is not present in the file, then that version is not present on the system.\r\n\r\nIf this check does not find a file, but WordPress is installed, it may be necessary to update the file path to reflect the location of the web server and the WordPress installation on the system.", 
-            "active": true, 
+            "files": "/var/www/html/wordpress/blog/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php",
+            "exportable": true,
+            "object_type": "file_string_presence",
+            "patterns": "\\@since\\s+4\\.7\\.2",
+            "suggestion": "If the 4.7.2 version string is not present in the file, then that version is not present on the system.\r\n\r\nIf this check does not find a file, but WordPress is installed, it may be necessary to update the file path to reflect the location of the web server and the WordPress installation on the system.",
+            "active": true,
             "present": true
           }
-        ], 
+        ],
         "name": "Is WordPress 4.7.2 installed"
       }
-    ], 
-    "template": false, 
-    "shared": true, 
+    ],
     "description": "To address the Content Injection vulnerability in WordPress 4.7.0 and 4.7.1"
   }
 }
