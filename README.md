@@ -44,3 +44,9 @@ a quick way to do it:
     * The containers will register to your account and appear in the group associated with the agent key.
 1. `cd app/ && python ./runme.py`
     * This will run the tool against your account.
+
+## Bonus material!!
+
+The LIDS policy in the root directory of this repository (`wordpress_content_injection.lids.json`) is populated with known malicious IPs.
+
+Feedback: toolbox@cloudpassage.com

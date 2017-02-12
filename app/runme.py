@@ -75,7 +75,7 @@ def get_group_for_server_id(reference, server_id):
     for server in reference:
         if server["id"] == server_id:
             return server["group_id"]
-    return False
+    print("Unable to get group for server ID %s" % server_id)
 
 
 def main():
@@ -87,7 +87,6 @@ def main():
 
     targets = []
     target_group_ids = []
-    # fim_policy_ids = []
     running_baseline_ids = []
     running_csm_ids = []
     csm_scan_servers = []
@@ -111,6 +110,7 @@ def main():
     for target_group_id in target_group_ids:
         print("    Attaching CSM policy to group with ID %s" % target_group_id)
         halo_api.assign_csm_policy_to_group(csm_policy_id, target_group_id)
+        time.sleep(3)
     for target in targets:
         if target[0] not in csm_scan_servers:
             csm_scan_servers.append(target[0])
@@ -150,8 +150,6 @@ def main():
             time.sleep(10)  # Don't beat on the API
             baseline = halo_api.get_fim_baseline(policy_id, baseline_id)["baseline"]["details"]
             running_baseline_ids.remove((server, baseline_id, policy_id))
-            pp = pprint.PrettyPrinter(indent=4)
-
             if "targets" not in baseline:
                 continue
             for target in baseline["targets"]:

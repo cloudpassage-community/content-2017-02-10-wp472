@@ -1,0 +1,73 @@
+{
+  "lids_policy": {
+    "name": "Wordpress content injection",
+    "module": "lids",
+    "description": "",
+    "platform": "linux",
+    "rules": [
+      {
+        "name": "Wordpress Content Injection: Known Bad User",
+        "kind": "text",
+        "search_pattern": "w4l3XzY3",
+        "critical": true,
+        "active": true,
+        "alert": true,
+        "file_path": "/var/log/apache2/access.log"
+      },
+      {
+        "name": "Wordpress Content Injection: Known Bad IP",
+        "kind": "text",
+        "search_pattern": "185\\.116\\.213\\.71",
+        "critical": false,
+        "active": true,
+        "alert": false,
+        "file_path": "/var/log/apache2/access.log"
+      },
+      {
+        "name": "Wordpress Content Injection: Known Bad IP",
+        "kind": "text",
+        "search_pattern": "176\\.9\\.36\\.102",
+        "critical": false,
+        "active": true,
+        "alert": false,
+        "file_path": "/var/log/apache2/access.log"
+      },
+      {
+        "name": "Wordpress Content Injection: Known Bad IP",
+        "kind": "text",
+        "search_pattern": "134\\.213\\.54\\.163",
+        "critical": false,
+        "active": true,
+        "alert": false,
+        "file_path": "/var/log/apache2/access.log"
+      },
+      {
+        "name": "Wordpress Content Injection: Known Bad IP",
+        "kind": "text",
+        "search_pattern": "37\\.237\\.192\\.22",
+        "critical": false,
+        "active": true,
+        "alert": false,
+        "file_path": "/var/log/apache2/access.log"
+      },
+      {
+        "name": "Wordpress Content Injection: Known Bad IP",
+        "kind": "text",
+        "search_pattern": "144\\.217\\.81\\.160",
+        "critical": false,
+        "active": true,
+        "alert": false,
+        "file_path": "/var/log/apache2/access.log"
+      },
+      {
+        "name": "Wordpress Content Injection: Known Bad IP",
+        "kind": "text",
+        "search_pattern": "2a00:1a48:7808:104:9b57:dda6:eb3c:61e1",
+        "critical": false,
+        "active": true,
+        "alert": false,
+        "file_path": "/var/log/apache2/access.log"
+      }
+    ]
+  }
+}
