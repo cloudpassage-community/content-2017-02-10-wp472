@@ -19,7 +19,7 @@ This tool will:
   * Retain a list of all Wordpress installs (and versions) for final report
 1. Install targeted CSM policy and configure for every group with a web server with or without the Wordpress package installed
 1. Examine SVA inventory, looking for installations of Nginx and Apache
-  * If any are found, we inject FIM policies into the groups and force baselines
+  * If any are found, we generate and inject FIM policies into the account and force baselines on hosts running Apache or Nginx
     * Baselines will be examined for:
       * Hashes of known vulnerable php files
       * Strings in file paths which may indicate that you're running the WP restful API
