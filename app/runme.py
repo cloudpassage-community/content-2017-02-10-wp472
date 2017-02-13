@@ -3,7 +3,7 @@ import os
 import pprint
 import re
 import time
-from wpchecker import Halo
+from wpchecker import Halo, Utility
 
 here_dir = here_dir = os.path.dirname(os.path.abspath(__file__))
 hashes_file = os.path.join(here_dir, "hashes.txt")
@@ -16,66 +16,6 @@ halo_api_key = os.getenv("HALO_API_KEY")
 halo_api_secret_key = os.getenv("HALO_API_SECRET_KEY")
 
 halo_api = Halo(halo_api_key, halo_api_secret_key)
-
-
-def get_lines_from_file(file_path):
-    with open(file_path) as file_obj:
-        retval = (file_obj.read().split('\n'))
-    return retval
-
-
-def fim_webroot(info_tup):
-    """info_tup = (server_id, package_name, package_version)"""
-    webroot_reference = {"wordpress": "/usr/share/wordpress",
-                         "nginx": "/usr/share/nginx/html",
-                         "httpd": "/var/www/html",
-                         "apache2": "/var/www/html",
-                         "apache": "/var/www/html"}
-    return webroot_reference[info_tup[1]]
-
-
-def generate_fim_policy(webroot):
-    name = "Wordpress hunter for %s" % webroot
-    return {
-          "fim_policy": {
-            "name": name,
-            "description": "Collecting hashes, looking for Wordpress installs",
-            "platform": "linux",
-            "rules": [{
-              "target":  webroot,
-              "description": "All webroot files",
-              "recurse": True,
-              "patterns": []}, {
-              "target": str("%s/wordpress/wp-includes/rest-api/endpoints/class-wp-rest-posts-controller.php" % webroot),
-              "description": "Specifically looking for endpoints",
-              "recurse": True,
-              "patterns": []
-            }]
-          }
-        }
-
-
-def fim_path_suspect(path):
-    for matcher in get_lines_from_file(paths_file):
-        if matcher == "":
-            continue
-        m = re.compile(matcher)
-        if m.match(path):
-            return True
-    return False
-
-
-def fim_hash_suspect(fim_hash):
-    if fim_hash in get_lines_from_file(hashes_file):
-        return True
-    return False
-
-
-def get_group_for_server_id(reference, server_id):
-    for server in reference:
-        if server["id"] == server_id:
-            return server["group_id"]
-    print("Unable to get group for server ID %s" % server_id)
 
 
 def main():
@@ -104,7 +44,7 @@ def main():
 
     print("Attaching CSM policy to every group containing a web server...")
     for target in targets:
-        grp_id = get_group_for_server_id(server_reference, target[0])
+        grp_id = Utility.get_group_for_server_id(server_reference, target[0])
         if grp_id not in target_group_ids:
             target_group_ids.append(grp_id)
     for target_group_id in target_group_ids:
@@ -121,7 +61,7 @@ def main():
     for target in targets:
         if target[0] not in fim_scan_servers:
             fim_scan_servers.append(target[0])
-            fim_policy_id = halo_api.install_fim_policy(generate_fim_policy(fim_webroot(target)))
+            fim_policy_id = halo_api.install_fim_policy(Utility.generate_fim_policy(Utility.fim_webroot(target)))
             print("    Triggering baseline for server with ID %s" % target[0])
             running_baseline_ids.append((target[0], halo_api.create_baseline(target[0], fim_policy_id), fim_policy_id))
 
@@ -154,10 +94,9 @@ def main():
                 continue
             for target in baseline["targets"]:
                 for obj in target["objects"]:
-                    # pp.pprint(obj)
-                    if fim_path_suspect(obj["filename"]):
+                    if Utility.fim_path_suspect(obj["filename"], paths_file):
                         baseline_alert_messages += str("    Potential issue on server %s (path: %s)\n" % (server, obj["filename"]))
-                    if fim_hash_suspect(obj["contents"]):
+                    if Utility.fim_hash_suspect(obj["contents"], hashes_file):
                         baseline_alert_messages += str("    Bad hash match: Server %s file %s\n" % (server, obj["filename"]))
 
     # Print results

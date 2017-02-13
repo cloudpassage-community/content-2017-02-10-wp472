@@ -1,0 +1,2 @@
+/dev/null$
+/var/www/html/allthethings.*
